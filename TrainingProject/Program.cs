@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace TrainingProject
 {
@@ -7,6 +10,11 @@ namespace TrainingProject
     {
         static void Main(string[] args)
         {
+            var p = new Program();
+
+           // p.ReadDataFromFile(@"k:\test.txt");
+            p.ReadDataFromFile();
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -25,6 +33,26 @@ namespace TrainingProject
                 if (!value.Equals(lastElement)) Console.Write(",");
             }
             Console.WriteLine("\n-----------------");
+        }
+
+       
+        public void ReadDataFromFile()
+        {
+            var connectionString = ConfigurationManager.AppSettings["Path"];
+            try
+            {   
+                using (StreamReader sr = new StreamReader(connectionString))
+                {
+                    
+                    String line = sr.ReadToEnd();
+                    Console.WriteLine(line);
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
