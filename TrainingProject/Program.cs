@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Configuration;
+using System.IO;
+using System.Collections.Generic;
 
 namespace TrainingProject
 {
@@ -7,6 +10,12 @@ namespace TrainingProject
     {
         static void Main(string[] args)
         {
+            //List<string> li = LoadDataFromAllCSV();
+            //foreach (var item in li)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
         }
 
         /// <summary>
@@ -25,6 +34,39 @@ namespace TrainingProject
                 if (!value.Equals(lastElement)) Console.Write(",");
             }
             Console.WriteLine("\n-----------------");
+
+
         }
+
+        public static List<string> LoadDataFromAllCSV()
+        {
+            List<string> listA = new List<string>();
+            string dataPath = ConfigurationManager.AppSettings["DataPath"];
+            if(!String.IsNullOrEmpty(dataPath))
+            {
+                var files = Directory.EnumerateFiles(dataPath, "*.csv");
+                
+                foreach (string file in files)
+                {
+                    using (var reader = new StreamReader(file))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            var line = reader.ReadLine();
+                            var values = line.Split('|');
+
+                            for (int i = 0; i < values.Length; i++)
+                            {
+                                listA.Add(values[i]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return listA;
+        }
+
+
     }
 }
