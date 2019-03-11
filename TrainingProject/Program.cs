@@ -58,6 +58,7 @@ namespace TrainingProject
                             for (int i = 0; i < values.Length; i++)
                             {
                                 listA.Add(values[i]);
+
                             }
                         }
                     }
