@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,10 @@ namespace TrainingProject
     {
         static void Main(string[] args)
         {
-            var p = new Program();
+        
+            var read = ReadDataFromFile(ConfigurationManager.AppSettings["Path"]);
+            PrintDataInConsole(read);
 
-           // p.ReadDataFromFile(@"k:\test.txt");
-            p.ReadDataFromFile();
             Console.ReadKey();
         }
 
@@ -36,16 +37,17 @@ namespace TrainingProject
         }
 
        
-        public void ReadDataFromFile()
-        {
-            var connectionString = ConfigurationManager.AppSettings["Path"];
+        public static List<String> ReadDataFromFile(String path)
+        {           
+            var line = new List<String>();
             try
             {   
-                using (StreamReader sr = new StreamReader(connectionString))
-                {
-                    
-                    String line = sr.ReadToEnd();
-                    Console.WriteLine(line);
+                using (StreamReader sr = new StreamReader(path))
+                {                  
+                    while (sr.Peek() >= 0)
+                    {
+                        line.Add(sr.ReadLine());
+                    }
                 }
             }
             catch (IOException e)
@@ -53,6 +55,24 @@ namespace TrainingProject
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
             }
+            return line;
         }
+
+        public static void PrintDataInConsole(List<String> listString)
+        {
+            var headerString = listString.FirstOrDefault();
+            var column = headerString.Split('|');
+            listString.Remove(headerString);
+            var rows = new List<String[]>();
+            foreach(var row in listString)
+            {
+                rows.Add(row.Split('|'));
+            }
+            for(int i = 0; i< column.Count(); i++)
+            {
+                PrintColumnValues(column[i], rows.Select(row =>row[i]).ToArray());
+            }
+        }
+
     }
 }
