@@ -29,13 +29,9 @@ namespace TrainingProject
             li = LoadDataFromAllCSV();
             foreach (var item in li)
             {
-                Console.WriteLine(item);
+                var read = ReadDataFromFile(item);
+                PrintDataInConsole(read);
             }
-        
-            PrintColumnValues("test", new[] { "abc", "dfads", "asd" });
-        
-            var read = ReadDataFromFile(ConfigurationManager.AppSettings["Path"]);
-            PrintDataInConsole(read);
 
             Console.ReadKey();
         }
