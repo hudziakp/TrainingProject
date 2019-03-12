@@ -10,6 +10,12 @@ namespace TrainingProject
     {
         static void Main(string[] args)
         {
+            List<String> li = new List<string>();
+            li = LoadDataFromAllCSV();
+            foreach (var item in li)
+            {
+                Console.WriteLine(item);
+            }
         }
 
         /// <summary>
@@ -28,15 +34,13 @@ namespace TrainingProject
                 if (!value.Equals(lastElement)) Console.Write(",");
             }
             Console.WriteLine("\n-----------------");
-
-
         }
 
         public static List<string> LoadDataFromAllCSV()
         {
             List<string> listA = new List<string>();
             string dataPath = ConfigurationManager.AppSettings["DataPath"];
-            if(!String.IsNullOrEmpty(dataPath))
+            if(!string.IsNullOrEmpty(dataPath))
             {
                 var files = Directory.EnumerateFiles(dataPath, "*.csv");
                 foreach (var item in files)
@@ -47,7 +51,5 @@ namespace TrainingProject
             }
             return listA;
         }
-
-
     }
 }
