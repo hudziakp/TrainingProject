@@ -10,12 +10,6 @@ namespace TrainingProject
     {
         static void Main(string[] args)
         {
-            //List<string> li = LoadDataFromAllCSV();
-            //foreach (var item in li)
-            //{
-            //    Console.WriteLine(item);
-            //}
-
         }
 
         /// <summary>
@@ -45,26 +39,12 @@ namespace TrainingProject
             if(!String.IsNullOrEmpty(dataPath))
             {
                 var files = Directory.EnumerateFiles(dataPath, "*.csv");
-                
-                foreach (string file in files)
+                foreach (var item in files)
                 {
-                    using (var reader = new StreamReader(file))
-                    {
-                        while (!reader.EndOfStream)
-                        {
-                            var line = reader.ReadLine();
-                            var values = line.Split('|');
-
-                            for (int i = 0; i < values.Length; i++)
-                            {
-                                listA.Add(values[i]);
-
-                            }
-                        }
-                    }
+                    string fullPath = Path.GetFullPath(item);
+                    listA.Add(fullPath);
                 }
             }
-
             return listA;
         }
 
