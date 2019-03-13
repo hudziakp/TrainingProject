@@ -3,39 +3,23 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Configuration;
-using System.IO;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Text;
 
 namespace TrainingProject
 {
     class Program
     {
-        static ConsoleColor[] GetConfigurationColor()
-        {
-            var color = new ConsoleColor[2];
-            var HeaderColor = ConfigurationManager.AppSettings["HeaderColor"];
-            var ValueColor = ConfigurationManager.AppSettings["ValueColor"];
-            color[0] = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), HeaderColor);
-            color[1] = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), ValueColor);
-            return color;
-        }
-
         static void Main(string[] args)
         {
-            List<String> li = new List<string>();
-            li = LoadDataFromAllCSV();
-            foreach (var item in li)
+            var listOfAllFiles = FindAllCsvFilePaths();
+            foreach (var path in listOfAllFiles)
             {
-                var read = ReadDataFromFile(item);
-                PrintDataInConsole(read);
+                var dataFromFile = ReadDataFromFile(path);
+                PrintDataInConsole(dataFromFile);
             }
-
             Console.ReadKey();
         }
 
+        #region Internal Methods
         /// <summary>
         /// Prints Column name and values into the Console
         /// </summary>
@@ -58,18 +42,19 @@ namespace TrainingProject
             Console.ResetColor();
             Console.WriteLine("\n-----------------"); 
         }
+        #endregion
 
-       
-        public static List<String> ReadDataFromFile(String path)
+        #region Public Method
+        public static List<string> ReadDataFromFile(string path)
         {           
-            var line = new List<String>();
+            var lines = new List<string>();
             try
             {   
-                using (StreamReader sr = new StreamReader(path))
+                using (var sr = new StreamReader(path))
                 {                  
                     while (sr.Peek() >= 0)
                     {
-                        line.Add(sr.ReadLine());
+                        lines.Add(sr.ReadLine());
                     }
                 }
             }
@@ -78,40 +63,56 @@ namespace TrainingProject
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
             }
-            return line;
+            return lines;
         }
 
-        public static void PrintDataInConsole(List<String> listString)
+        public static void PrintDataInConsole(List<string> listString)
         {
             var headerString = listString.FirstOrDefault();
-            var column = headerString.Split('|');
-            listString.Remove(headerString);
-            var rows = new List<String[]>();
-            foreach(var row in listString)
+            if (!string.IsNullOrEmpty(headerString))
             {
-                rows.Add(row.Split('|'));
-            }
-            for(int i = 0; i< column.Count(); i++)
-            {
-                PrintColumnValues(column[i], rows.Select(row =>row[i]).ToArray());
+                var column = headerString.Split('|');
+                listString.Remove(headerString);
+                var rows = new List<string[]>();
+                foreach (var row in listString)
+                {
+                    rows.Add(row.Split('|'));
+                }
+
+                for (var i = 0; i < column.Count(); i++)
+                {
+                    PrintColumnValues(column[i], rows.Select(row => row[i]).ToArray());
+                }
             }
         }
 
-
-        public static List<string> LoadDataFromAllCSV()
+        public static List<string> FindAllCsvFilePaths()
         {
-            List<string> listA = new List<string>();
-            string dataPath = ConfigurationManager.AppSettings["DataPath"];
+            var listOfAllFiles = new List<string>();
+            var dataPath = ConfigurationManager.AppSettings["DataPath"];
             if(!string.IsNullOrEmpty(dataPath))
             {
                 var files = Directory.EnumerateFiles(dataPath, "*.csv");
                 foreach (var item in files)
                 {
                     string fullPath = Path.GetFullPath(item);
-                    listA.Add(fullPath);
+                    listOfAllFiles.Add(fullPath);
                 }
             }
-            return listA;
+            return listOfAllFiles;
         }
+        #endregion
+
+        #region Private
+        private static ConsoleColor[] GetConfigurationColor()
+        {
+            var color = new ConsoleColor[2];
+            var headerColor = ConfigurationManager.AppSettings["HeaderColor"];
+            var valueColor = ConfigurationManager.AppSettings["ValueColor"];
+            color[0] = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), headerColor);
+            color[1] = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), valueColor);
+            return color;
+        }
+        #endregion
     }
 }
