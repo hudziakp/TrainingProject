@@ -14,6 +14,7 @@ namespace TrainingProject
             foreach (var path in listOfAllFiles)
             {
                 var dataFromFile = ReadDataFromFile(path);
+                Console.WriteLine($"\n======= {path} =======\n");
                 PrintDataInConsole(dataFromFile);
             }
             Console.ReadKey();
@@ -27,31 +28,35 @@ namespace TrainingProject
         /// <param name="values">String values for column</param>
         internal static void PrintColumnValues(string columnName, string[] values)
         {
-            var color = GetConfigurationColor();
-            if (values == null) throw new ArgumentNullException(nameof(values));
-            Console.ForegroundColor = color[0];
-            Console.Write($"{columnName}:");
-            
-            var lastElement = values.Last();
-            Console.ForegroundColor = color[1];
-            foreach (var value in values)
+            if (!string.IsNullOrWhiteSpace(columnName))
             {
-                Console.Write($"{value}");
-                if (!value.Equals(lastElement)) Console.Write(",");
+                var color = GetConfigurationColor();
+                if (values == null) throw new ArgumentNullException(nameof(values));
+                Console.ForegroundColor = color[0];
+                Console.Write($"{columnName}:");
+
+                var lastElement = values.Last();
+                Console.ForegroundColor = color[1];
+                foreach (var value in values)
+                {
+                    Console.Write($"{value}");
+                    if (!value.Equals(lastElement)) Console.Write(",");
+                }
+
+                Console.ResetColor();
+                Console.WriteLine("\n-----------------");
             }
-            Console.ResetColor();
-            Console.WriteLine("\n-----------------"); 
         }
         #endregion
 
         #region Public Method
         public static List<string> ReadDataFromFile(string path)
-        {           
+        {
             var lines = new List<string>();
             try
-            {   
+            {
                 using (var sr = new StreamReader(path))
-                {                  
+                {
                     while (sr.Peek() >= 0)
                     {
                         lines.Add(sr.ReadLine());
@@ -90,7 +95,7 @@ namespace TrainingProject
         {
             var listOfAllFiles = new List<string>();
             var dataPath = ConfigurationManager.AppSettings["DataPath"];
-            if(!string.IsNullOrEmpty(dataPath))
+            if (!string.IsNullOrEmpty(dataPath))
             {
                 var files = Directory.EnumerateFiles(dataPath, "*.csv");
                 foreach (var item in files)
