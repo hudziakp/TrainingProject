@@ -26,7 +26,6 @@ namespace TrainingProject
             {
                 Console.WriteLine(item);
             }
-        }
             PrintColumnValues("test", new[] { "abc", "dfads", "asd" });
         }
 
