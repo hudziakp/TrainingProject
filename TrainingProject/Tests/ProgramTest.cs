@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
+using FluentAssertions;
 
-namespace TrainingProject
+namespace TrainingProject.Tests
 {
     [TestFixture]
     class ProgramTest
@@ -29,6 +32,29 @@ namespace TrainingProject
             StringAssert.Contains("Test Example",_stringWriter.ToString());
         }
 
+
+        [Test]
+        public void FindAllCsvFilePathsTest()
+        {
+            var paths = Program.FindAllCsvFilePaths();
+            paths.Should().HaveCount(2);
+            paths.Should().Contain(path => path.Contains("SampleData.csv"));
+            paths.Should().OnlyContain(path => Path.IsPathRooted(path));
+        }
+
+        [Test]
+        public void ReadDataFromFileTest()
+        {
+            var paths = Program.FindAllCsvFilePaths();
+            var sampleDataPath = paths.FirstOrDefault(path => path.Contains("SampleData.csv"));
+
+            var dataFromFile = Program.ReadDataFromFile(sampleDataPath);
+            dataFromFile.Should().HaveCount(4);
+            dataFromFile.Should().ContainSingle(line => line.Contains("|Occupation|"));
+            dataFromFile.Should().ContainSingle(line => line.Contains("Seller"));
+            dataFromFile.Should().OnlyHaveUniqueItems();
+        }
+
         [OneTimeSetUp]
         public void SetUp()
         {
@@ -40,7 +66,6 @@ namespace TrainingProject
         [SetUp]
         public void EveryTime()
         {
-            Console.Clear();
             var sb =_stringWriter.GetStringBuilder();
             sb.Remove(0, sb.Length);
         }

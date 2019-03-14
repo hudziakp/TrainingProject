@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace TrainingProject
 {
@@ -94,7 +95,7 @@ namespace TrainingProject
         public static List<string> FindAllCsvFilePaths()
         {
             var listOfAllFiles = new List<string>();
-            var dataPath = ConfigurationManager.AppSettings["DataPath"];
+            var dataPath = GetFolderPath();
             if (!string.IsNullOrEmpty(dataPath))
             {
                 var files = Directory.EnumerateFiles(dataPath, "*.csv");
@@ -105,6 +106,15 @@ namespace TrainingProject
                 }
             }
             return listOfAllFiles;
+        }
+
+        public static string GetFolderPath()
+        {
+            var codebase = Assembly.GetCallingAssembly().CodeBase;
+            var uri = new UriBuilder(codebase);
+            var assemblyPath = Uri.UnescapeDataString(uri.Path);
+            var path = new FileInfo(assemblyPath).Directory?.FullName;
+            return string.IsNullOrEmpty(path) ? null : Path.Combine(path, ConfigurationManager.AppSettings["DataPath"]);
         }
         #endregion
 
