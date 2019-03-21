@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -10,6 +11,7 @@ using System.Runtime.Serialization;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace TrainingProject.Tests
@@ -32,28 +34,45 @@ namespace TrainingProject.Tests
         }
 
 
+        /// <summary>
+        /// Verify if we use positive email we will get positive results
+        /// </summary>
+        /// <param name="email">Email to Verify</param>
         [Test]
-        public void GenericTest()
+        [TestCase("a@b.eu")]
+        [TestCase("test@pcmicorp.com")]
+        [TestCase("test1@pcmicorp.com")]
+        [TestCase("zuzanna.cos@pcmicorp.com")]
+        [TestCase("alamakota@pcmicorp.com")]
+        [TestCase("justyna@buziaczek.pl")]
+        [TestCase(EmailHandler.SampleEmail)]
+        public void VerifyEmailPositive(string email)
         {
-            var gen = new NotSoGeneric();
-            var str = new MyString("Something");
-
-            str.Print(() =>
-            {
-                var s = "Another Text";
-                gen.PrintText(str.Str);
-                return s;
-            });
-
-            str.Print(Aaaa);
+            var emailHandler = new EmailHandler(email);
+            emailHandler.IsValid.Should().BeTrue();
         }
 
-        public static string Aaaa()
+        [Test]
+        [TestCase("jestem.@com")]
+        [TestCase("test@com")]
+        [TestCase("test ss@pcmicorp.com")]
+        public void VerifyEmailNegative(string email)
         {
-            var s = "Another Text";
-            return s;
-
+            var emailHandler = new EmailHandler(email);
+            emailHandler.IsValid.Should().BeFalse();
         }
+
+
+        [Test]
+        [TestCase(ErrorType.Info, "Message 1")]
+        [TestCase(ErrorType.Warning, "Message 1")]
+        [TestCase(ErrorType.SystemFailure, "Message 1")]
+        public void VerifyEnums(ErrorType errorType, string message)
+        {
+            new ErrorHandler(errorType,message).PrintError();            
+        }
+
+
     }
 
 
@@ -72,13 +91,13 @@ namespace TrainingProject.Tests
 
     public class Generic
     {
-        private string AddTag(string text ="jhvj", params string[] reso)
+        private string AddTag(string text ="jhvj", params string[] comments)
         {
-            if (reso != null)
+            if (comments != null)
             {
-                foreach (var r in reso)
+                foreach (var comment in comments)
                 {
-                    Console.WriteLine(r);
+                    Console.WriteLine(comment);
                 }
             }
             return $"TAG {text}";

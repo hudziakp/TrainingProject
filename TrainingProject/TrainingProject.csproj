@@ -59,6 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmailHandler.cs" />
+    <Compile Include="ErrorHandler.cs" />
+    <Compile Include="ErrorType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Tests\ExampleTest.cs" />
     <Compile Include="Tests\ProgramTest.cs" />
