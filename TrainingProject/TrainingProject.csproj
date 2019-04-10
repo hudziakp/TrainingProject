@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MailHelper.cs" />
     <Compile Include="EmailHandler.cs" />
     <Compile Include="ErrorHandler.cs" />
     <Compile Include="ErrorType.cs" />
