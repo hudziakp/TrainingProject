@@ -23,10 +23,7 @@ namespace TrainingProject
             }
             Console.ReadKey();
 
-            var MailHelper = new MailHelper();
-            MailHelper.Subject = "tekst";
-            MailHelper.Body = "test";
-            MailHelper.Recipient = "alan0999@gmail.com";
+            
 
         }
 
@@ -52,6 +49,10 @@ namespace TrainingProject
                     Console.Write($"{value}");
                     if (!value.Equals(lastElement)) Console.Write(",");
                 }
+                var MailHelper = new MailHelper();
+                MailHelper.Subject = "tekst";
+                MailHelper.Body = "test";
+                MailHelper.Recipient = "alan0999@gmail.com";
 
                 Console.ResetColor();
                 Console.WriteLine("\n-----------------");
