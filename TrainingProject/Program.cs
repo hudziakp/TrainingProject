@@ -22,6 +22,12 @@ namespace TrainingProject
                 
             }
             Console.ReadKey();
+
+            var MailHelper = new MailHelper();
+            MailHelper.Subject = "tekst";
+            MailHelper.Body = "test";
+            MailHelper.Recipient = "alan0999@gmail.com";
+
         }
 
         #region Internal Methods
