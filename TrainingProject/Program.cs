@@ -4,6 +4,8 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Net;
+using System.Net.Mail;
 
 namespace TrainingProject
 {
@@ -17,6 +19,7 @@ namespace TrainingProject
                 var dataFromFile = ReadDataFromFile(path);
                 Console.WriteLine($"\n======= {path} =======\n");
                 PrintDataInConsole(dataFromFile);
+                
             }
             Console.ReadKey();
         }
