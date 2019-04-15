@@ -11,17 +11,30 @@ namespace TrainingProject
     {
         static void Main(string[] args)
         {
-            var listOfAllFiles = FindAllCsvFilePaths();
-            foreach (var path in listOfAllFiles)
+            try
             {
-                var dataFromFile = ReadDataFromFile(path);
-                Console.WriteLine($"\n======= {path} =======\n");
-                PrintDataInConsole(dataFromFile);
-                
-            }
-            Console.ReadKey();
+                var listOfAllFiles = FindAllCsvFilePaths();
+                foreach (var path in listOfAllFiles)
+                {
+                    var dataFromFile = ReadDataFromFile(path);
+                    Console.WriteLine($"\n======= {path} =======\n");
+                    PrintDataInConsole(dataFromFile);
 
+                }
+                Console.ReadKey();
+            }
+            catch
+            {
+                var MailHelper = new MailHelper
+                {
+                    Subject = "Error",
+                    Body = "Unexpected Error",
+                    Recipient = "alan0999@gmail.com"
+                };
+                MailHelper.SendMail();
+            }
             
+
 
         }
 
@@ -47,13 +60,7 @@ namespace TrainingProject
                     Console.Write($"{value}");
                     if (!value.Equals(lastElement)) Console.Write(",");
                 }
-                var MailHelper = new MailHelper
-                {
-                    Subject = "tekst",
-                    Body = "test",
-                    Recipient = "alan0999@gmail.com"
-                };
-                MailHelper.SendMail();
+                
                 Console.ResetColor();
                 Console.WriteLine("\n-----------------");
             }
