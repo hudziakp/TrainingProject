@@ -4,8 +4,6 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Net;
-using System.Net.Mail;
 
 namespace TrainingProject
 {
@@ -49,11 +47,13 @@ namespace TrainingProject
                     Console.Write($"{value}");
                     if (!value.Equals(lastElement)) Console.Write(",");
                 }
-                var MailHelper = new MailHelper();
-                MailHelper.Subject = "tekst";
-                MailHelper.Body = "test";
-                MailHelper.Recipient = "alan0999@gmail.com";
-
+                var MailHelper = new MailHelper
+                {
+                    Subject = "tekst",
+                    Body = "test",
+                    Recipient = "alan0999@gmail.com"
+                };
+                MailHelper.SendMail();
                 Console.ResetColor();
                 Console.WriteLine("\n-----------------");
             }
